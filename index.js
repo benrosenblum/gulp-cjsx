@@ -27,8 +27,8 @@ module.exports = function(opt) {
       sourceRoot:     false,
       literate:       /\.(litcoffee|coffee\.md)$/.test(file.path),
       filename:       file.path,
-      sourceFiles:    [path.basename(file.path)],
-      generatedFile:  path.basename(dest)
+      sourceFiles:    [file.relative],
+      generatedFile:  gutil.replaceExtension(file.relative, '.js')
     }, opt);
 
     try {
@@ -37,7 +37,7 @@ module.exports = function(opt) {
       return callback(error(err))
     }
 
-    if (data.v3SourceMap && file.sourceMap) {
+    if (data && data.v3SourceMap && file.sourceMap) {
       applySourceMap(file, data.v3SourceMap);
       file.contents = new Buffer(data.js);
     } else {
